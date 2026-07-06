@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algonex Intern Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                    <span class="logo-text">Algonex<span>Interns</span></span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" id="nav-dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" id="btn-open-form">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Add Student</span>
+                </a>
+                <a href="#" class="nav-item" id="btn-export-json">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Export JSON</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>System Version 1.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search by name, role, or skill...">
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-primary" id="btn-quick-add">
+                        <i class="fa-solid fa-plus"></i> Add Student
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-body">
+                <!-- Stats Overview -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper blue">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-total">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper gold">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-topper">N/A</h3>
+                            <p>Topper (CGPA: <span id="stat-topper-cgpa">0.0</span>)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper purple">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-skills">0</h3>
+                            <p>Unique Skills</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper green">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-eligible">0</h3>
+                            <p>Eligible Interns</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Criteria & Filter Controls -->
+                <section class="controls-panel card">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-sliders"></i> Eligibility & Filtering Settings</h2>
+                        <span class="badge badge-info">Live Status</span>
+                    </div>
+                    <div class="controls-grid">
+                        <div class="control-group">
+                            <label for="cgpa-threshold">Min CGPA Threshold: <span id="cgpa-threshold-val">7.0</span></label>
+                            <input type="range" id="cgpa-threshold" min="0" max="10" step="0.1" value="7.0" class="slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="skill-required">Required Skill:</label>
+                            <select id="skill-required" class="select-input">
+                                <option value="Python">Python (Default)</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Section -->
+                <section class="students-section">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-list-ul"></i> Student Roster</h2>
+                        <span class="results-count" id="results-count">Showing all students</span>
+                    </div>
+                    <div class="students-grid" id="students-grid">
+                        <!-- Student Cards will be dynamically inserted here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Form Modal -->
+    <div class="modal" id="student-modal">
+        <div class="modal-content card">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <div class="modal-header">
+                <h2>Add New Student Profile</h2>
+                <p>Fill out the fields to add an intern to the database</p>
+            </div>
+            <form id="student-form" class="student-form">
+                <div class="form-group">
+                    <label for="student-name">Full Name</label>
+                    <input type="text" id="student-name" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="student-cgpa">CGPA (0 - 10)</label>
+                        <input type="number" id="student-cgpa" step="0.01" min="0" max="10" required placeholder="e.g. 8.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-role">Target Role</label>
+                        <input type="text" id="student-role" required placeholder="e.g. Frontend Developer">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Projects (Add 2 projects)</label>
+                    <div class="projects-inputs">
+                        <input type="text" id="project-1" required placeholder="Project 1 name">
+                        <input type="text" id="project-2" required placeholder="Project 2 name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="student-skills">Skills (space-separated)</label>
+                    <input type="text" id="student-skills" required placeholder="e.g. Python JavaScript React HTML CSS">
+                    <small class="form-help">Enter skills separated by space (e.g. Python SQL Docker)</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JSON Viewer Modal -->
+    <div class="modal" id="json-modal">
+        <div class="modal-content card json-modal-content">
+            <button class="modal-close" id="json-modal-close-btn">&times;</button>
+            <div class="modal-header">
+                <h2>Export Student Database (JSON-like Structure)</h2>
+                <p>Raw serialization of all students in the registry</p>
+            </div>
+            <div class="json-actions">
+                <button class="btn btn-secondary btn-sm" id="btn-copy-json">
+                    <i class="fa-solid fa-copy"></i> Copy to Clipboard
+                </button>
+            </div>
+            <pre class="json-code-block"><code id="json-code"></code></pre>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Profile Saved Successfully!</div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
