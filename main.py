@@ -60,11 +60,11 @@ def serialize_student(student):
     }
 
 class StudentCreate(BaseModel):
-    name: str = Field(..., example="Charlie Brown")
-    cgpa: float = Field(..., example=8.2)
-    role: str = Field(..., example="DevOps Engineer")
-    projects: List[str] = Field(..., example=["CI/CD Pipeline", "Kubernetes Cluster"])
-    skills: List[str] = Field(..., example=["Python", "Docker", "AWS"])
+    name: str = Field(..., examples=["Charlie Brown"])
+    cgpa: float = Field(..., examples=[8.2])
+    role: str = Field(..., examples=["DevOps Engineer"])
+    projects: List[str] = Field(..., examples=[["CI/CD Pipeline", "Kubernetes Cluster"]])
+    skills: List[str] = Field(..., examples=[["Python", "Docker", "AWS"]])
 
 @app.get("/api/students")
 def get_students(search: Optional[str] = None):
@@ -156,4 +156,9 @@ else:
     @app.get("/")
     def read_root():
         return FileResponse(os.path.join("static", "index.html"))
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 

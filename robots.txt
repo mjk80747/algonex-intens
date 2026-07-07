@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Update the Sitemap URL below to your real site URL
+Sitemap: https://example.com/sitemap.xml
